@@ -26,81 +26,61 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultTextEl = document.getElementById('resultText');
     const restartButtonEl = document.getElementById('restartButton');
 
-function displayQuestion() {
-    if (currentQuestionIndex >= questions.length) {
-        showResults();
-        return;
+    // Функция для отображения вопроса
+    function displayQuestion() {
+        if (currentQuestionIndex >= questions.length) {
+            showResults();
+            return;
+        }
+
+        const question = questions[currentQuestionIndex];
+        questionNumberEl.textContent = `Вопрос №${currentQuestionIndex + 1} из ${questions.length}`;
+        questionTextEl.textContent = question.text;
+
+        answersContainerEl.innerHTML = '';  // Очищаем контейнер с ответами
+
+        const shuffledAnswers = shuffle([
+            ...question.correctAnswers,
+            ...question.allAnswers.filter(a => !question.correctAnswers.includes(a)).slice(0, 6 - question.correctAnswers.length)
+        ]);
+
+        shuffledAnswers.forEach(answer => {
+            const button = document.createElement('button');
+            button.textContent = answer;
+            button.addEventListener('click', () => toggleAnswer(button, answer));
+            answersContainerEl.appendChild(button);
+        });
+
+        nextButtonEl.textContent = 'Проверить';
+        nextButtonEl.disabled = true;
+        isAnswersChecked = false;
     }
 
-    const question = questions[currentQuestionIndex];
-    
-    // Проверим, что мы получаем правильный вопрос
-    console.log(question.text);
-
-    // Обновляем номер вопроса
-    questionNumberEl.textContent = `Вопрос №${currentQuestionIndex + 1} из ${questions.length}`;
-    // Обновляем текст вопроса
-    questionTextEl.textContent = question.text;
-
-    // Обновляем контейнер с вариантами ответов
-    answersContainerEl.innerHTML = ''; // очищаем старые кнопки перед добавлением новых
-
-    // Перемешиваем правильные и неправильные ответы
-    const shuffledAnswers = shuffle([...question.correctAnswers, ...question.allAnswers.filter(a => !question.correctAnswers.includes(a)).slice(0, 6 - question.correctAnswers.length)]);
-
-    shuffledAnswers.forEach(answer => {
-        const button = document.createElement('button');
-        button.textContent = answer;
-        button.addEventListener('click', () => toggleAnswer(button, answer));
-        answersContainerEl.appendChild(button);
-    });
-
-    nextButtonEl.textContent = 'Проверить';
-    nextButtonEl.disabled = true;
-    isAnswersChecked = false;
-}
-
+    // Функция для выделения выбранного ответа
     function toggleAnswer(button, answer) {
         if (selectedAnswers.includes(answer)) {
             selectedAnswers = selectedAnswers.filter(a => a !== answer);
-            button.style.backgroundColor = '#f0f0f0';
+            button.style.backgroundColor = '#f0f0f0';  // Сбрасываем цвет
         } else {
             selectedAnswers.push(answer);
-            button.style.backgroundColor = '#cce5ff';
+            button.style.backgroundColor = '#cce5ff';  // Выделяем выбранный ответ
         }
 
-        nextButtonEl.disabled = selectedAnswers.length === 0;
+        nextButtonEl.disabled = selectedAnswers.length === 0;  // Делаем кнопку активной только при выборе хотя бы одного ответа
     }
 
-function checkAnswers() {
-    const question = questions[currentQuestionIndex];
-    const allCorrect = selectedAnswers.every(answer => question.correctAnswers.includes(answer)) &&
-                       question.correctAnswers.every(answer => selectedAnswers.includes(answer));
+    // Функция для проверки правильности ответов
+    function checkAnswers() {
+        const question = questions[currentQuestionIndex];
+        const allCorrect = selectedAnswers.every(answer => question.correctAnswers.includes(answer)) &&
+                           question.correctAnswers.every(answer => selectedAnswers.includes(answer));
 
-    if (allCorrect) {
-        correctAnswersCount++;
-    } else {
-        wrongAnswersCount++;
-    }
-
-    // Для каждой кнопки в answersContainer проверяем, правильный ли это ответ
-    Array.from(answersContainerEl.children).forEach(button => {
-        const answer = button.textContent;
-        
-        if (question.correctAnswers.includes(answer)) {
-            // Если ответ правильный, но не выбран — жёлтый цвет
-            button.classList.add(selectedAnswers.includes(answer) ? 'correct' : 'unselected-correct');
-        } else if (selectedAnswers.includes(answer)) {
-            // Если ответ выбран, но неправильный — красный цвет
-            button.classList.add('incorrect');
+        if (allCorrect) {
+            correctAnswersCount++;
+        } else {
+            wrongAnswersCount++;
         }
 
-        button.disabled = true; // После проверки блокируем все кнопки
-    });
-
-    isAnswersChecked = true;
-    nextButtonEl.textContent = 'Далее';
-}
         Array.from(answersContainerEl.children).forEach(button => {
             const answer = button.textContent;
             if (question.correctAnswers.includes(answer)) {
@@ -108,13 +88,14 @@ function checkAnswers() {
             } else if (selectedAnswers.includes(answer)) {
                 button.classList.add('incorrect');
             }
-            button.disabled = true;
+            button.disabled = true;  // Делаем кнопки неактивными после проверки
         });
 
         isAnswersChecked = true;
         nextButtonEl.textContent = 'Далее';
     }
 
+    // Функция для отображения результатов
     function showResults() {
         questionNumberEl.textContent = 'Тест завершен!';
         questionTextEl.textContent = '';
@@ -124,6 +105,7 @@ function checkAnswers() {
         nextButtonEl.style.display = 'none';
     }
 
+    // Функция для перезапуска викторины
     function restartQuiz() {
         currentQuestionIndex = 0;
         correctAnswersCount = 0;
@@ -134,6 +116,7 @@ function checkAnswers() {
         displayQuestion();
     }
 
+    // Обработчик нажатия кнопки "Проверить" или "Далее"
     nextButtonEl.addEventListener('click', () => {
         if (!isAnswersChecked) {
             checkAnswers();
@@ -144,15 +127,18 @@ function checkAnswers() {
         }
     });
 
+    // Обработчик нажатия кнопки "Начать сначала"
     restartButtonEl.addEventListener('click', restartQuiz);
 
-    displayQuestion();
-
+    // Функция для перемешивания массива
     function shuffle(array) {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
+            [array[i], array[j]] = [array[j], array[i]];  // Меняем местами элементы
         }
         return array;
     }
+
+    // Инициализация викторины
+    displayQuestion();
 });
