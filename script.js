@@ -72,8 +72,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Функция для проверки правильности ответов
 function checkAnswers() {
     const question = questions[currentQuestionIndex];
-    const allCorrect = selectedAnswers.every(answer => question.correctAnswers.includes(answer)) &&
-                       question.correctAnswers.every(answer => selectedAnswers.includes(answer));
+
+    // Проверяем правильность всех выбранных ответов
+    const allCorrect =
+        selectedAnswers.every(answer => question.correctAnswers.includes(answer)) &&
+        question.correctAnswers.every(answer => selectedAnswers.includes(answer));
 
     if (allCorrect) {
         correctAnswersCount++;
@@ -81,25 +84,31 @@ function checkAnswers() {
         wrongAnswersCount++;
     }
 
+    // Обрабатываем каждую кнопку
     Array.from(answersContainerEl.children).forEach(button => {
         const answer = button.textContent;
+
         if (question.correctAnswers.includes(answer)) {
-            // Добавляем класс для правильных ответов
+            // Ответ правильный
             if (selectedAnswers.includes(answer)) {
-                button.classList.add('correct'); // Выбран правильный ответ
+                button.classList.add('correct'); // Правильный и выбран
             } else {
                 button.classList.add('unselected-correct'); // Правильный, но не выбран
             }
         } else if (selectedAnswers.includes(answer)) {
-            // Добавляем класс для неправильных ответов
+            // Ответ неправильный, но выбран
             button.classList.add('incorrect');
         }
-        button.disabled = true;  // Делаем кнопки неактивными после проверки
+
+        // Делаем кнопку неактивной
+        button.disabled = true;
     });
 
+    // Устанавливаем флаг и текст кнопки
     isAnswersChecked = true;
     nextButtonEl.textContent = 'Далее';
 }
+
 
 
     // Функция для отображения результатов
