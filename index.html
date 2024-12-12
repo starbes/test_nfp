@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,22 +8,12 @@
 </head>
 <body>
     <div id="app">
-        <!-- Заголовок для отображения номера вопроса -->
-        <h1 id="questionNumber">Вопрос №1</h1>
-
-        <!-- Текст вопроса -->
+        <h1 id="questionNumber">Вопрос №1 из 2</h1>
         <p id="questionText">Текст вопроса</p>
-
-        <!-- Контейнер для кнопок с вариантами ответов -->
         <div id="answersContainer"></div>
-
-        <!-- Кнопка для проверки ответов и перехода к следующему вопросу -->
         <button id="nextButton">Проверить</button>
-
-        <!-- Контейнер для результатов -->
         <div id="resultContainer" style="display: none;">
-            <p id="resultText"></p>
-            <!-- Кнопка для перезапуска викторины -->
+            <p id="resultText">Правильных ответов: 0 Неправильных ответов: 0</p>
             <button id="restartButton">Начать сначала</button>
         </div>
     </div>
