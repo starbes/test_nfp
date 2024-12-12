@@ -48,18 +48,18 @@ button:disabled {
 }
 
 button.correct {
-    background-color: #3CB371;
+    background-color: #3CB371; /* Зелёный */
     color: #fff;
 }
 
 button.incorrect {
-    background-color: #CD5C5C;
+    background-color: #CD5C5C; /* Красный */
     color: #fff;
 }
 
 button.unselected-correct {
-    background-color: #FFD700;
-    color: #fff;
+    background-color: #FFD700; /* Жёлтый */
+    color: #000;
 }
 
 #resultContainer {
