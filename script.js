@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { text: "обеспечение психологической разгрузки и снятия стресса", correct: false }
       ]
     },
-    // Остальные вопросы...
+    // Другие вопросы...
   ];
 
   let currentQuestionIndex = 0;
@@ -59,6 +59,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     selectedAnswers = [];
     nextButton.style.display = "none";
+    nextButton.textContent = "Проверить";
+    nextButton.classList.remove("checked");
   }
 
   function handleAnswerSelection(button) {
@@ -90,24 +92,19 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   nextButton.addEventListener("click", () => {
-    const isAnswered = selectedAnswers.length > 0;
-    if (isAnswered) {
+    if (!nextButton.classList.contains("checked")) {
       checkAnswers();
       nextButton.textContent = "Следующий";
-      nextButton.removeEventListener("click", loadNextQuestion);
-      nextButton.addEventListener("click", loadNextQuestion);
+      nextButton.classList.add("checked");
+    } else {
+      currentQuestionIndex++;
+      if (currentQuestionIndex < questions.length) {
+        loadQuestion();
+      } else {
+        showResults();
+      }
     }
   });
-
-  function loadNextQuestion() {
-    currentQuestionIndex++;
-    if (currentQuestionIndex < questions.length) {
-      nextButton.textContent = "Проверить";
-      loadQuestion();
-    } else {
-      showResults();
-    }
-  }
 
   function showResults() {
     questionElement.innerText = "Тест завершен!";
