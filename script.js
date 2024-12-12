@@ -91,7 +91,7 @@ function checkAnswers() {
         if (question.correctAnswers.includes(answer)) {
             // Ответ правильный
             if (selectedAnswers.includes(answer)) {
-                button.style.backgroundColor = '#CD5C5C'; // Правильный и выбран
+                button.classList.add('unselected-correct'); // Правильный и выбран
             } else {
                 button.classList.add('unselected-correct'); // Правильный, но не выбран
             }
@@ -107,6 +107,10 @@ function checkAnswers() {
     // Устанавливаем флаг и текст кнопки
     isAnswersChecked = true;
     nextButtonEl.textContent = 'Далее';
+
+    Array.from(answersContainerEl.children).forEach(button => {
+    console.log(`Кнопка: "${button.textContent}" — Классы: ${button.className}`);
+});
 }
 
 
