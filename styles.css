@@ -50,17 +50,17 @@ button:disabled {
 
 button.correct {
     background-color: #3CB371;
-    color: #fff;
+    color: #3CB371;
 }
 
 button.incorrect {
     background-color: #CD5C5C;
-    color: #fff;
+    color: #CD5C5C;
 }
 
 button.unselected-correct {
     background-color: #FFD700;
-    color: #000;
+    color: #FFD700;
 }
 
 #resultContainer {
