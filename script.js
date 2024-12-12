@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function checkAnswers() {
     const question = questions[currentQuestionIndex];
 
-    // Проверяем правильность всех выбранных ответов
+    // Проверяем правильность выбранных ответов
     const allCorrect =
         selectedAnswers.every(answer => question.correctAnswers.includes(answer)) &&
         question.correctAnswers.every(answer => selectedAnswers.includes(answer));
@@ -84,19 +84,19 @@ function checkAnswers() {
         wrongAnswersCount++;
     }
 
-    // Обрабатываем каждую кнопку
+    // Обрабатываем кнопки
     Array.from(answersContainerEl.children).forEach(button => {
         const answer = button.textContent;
 
         if (question.correctAnswers.includes(answer)) {
-            // Ответ правильный
+            // Если ответ правильный
             if (selectedAnswers.includes(answer)) {
-                button.classList.add('unselected-correct'); // Правильный и выбран
+                button.classList.add('correct'); // Выбранный правильный ответ
             } else {
-                button.classList.add('unselected-correct'); // Правильный, но не выбран
+                button.classList.add('unselected-correct'); // Правильный, но не выбранный
             }
         } else if (selectedAnswers.includes(answer)) {
-            // Ответ неправильный, но выбран
+            // Если ответ неправильный и был выбран
             button.classList.add('incorrect');
         }
 
@@ -104,7 +104,7 @@ function checkAnswers() {
         button.disabled = true;
     });
 
-        // Логируем классы кнопок для отладки
+    // Логируем состояние кнопок для проверки
     console.log("Состояние кнопок после проверки:");
     Array.from(answersContainerEl.children).forEach(button => {
         console.log(`Кнопка: "${button.textContent}" — Классы: ${button.className}`);
@@ -113,11 +113,7 @@ function checkAnswers() {
     // Устанавливаем флаг и текст кнопки
     isAnswersChecked = true;
     nextButtonEl.textContent = 'Далее';
-
-
 }
-
-
 
     // Функция для отображения результатов
     function showResults() {
