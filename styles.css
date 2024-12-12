@@ -36,30 +36,29 @@ button {
     cursor: pointer;
 }
 
-button:disabled {
-    cursor: not-allowed;
-}
-
 #answersContainer button {
     display: block;
     width: 100%;
     margin-bottom: 10px;
-    
 }
 
 button.correct {
     background-color: #3CB371; /* Зелёный */
-    color: #fff;
+    color: #000;
 }
 
 button.incorrect {
     background-color: #CD5C5C; /* Красный */
-    color: #fff;
+    color: #000;
 }
 
 button.unselected-correct {
     background-color: #FFD700; /* Жёлтый */
     color: #000;
+}
+
+button:disabled {
+    cursor: not-allowed;
 }
 
 #resultContainer {
