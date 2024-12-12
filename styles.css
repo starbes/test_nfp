@@ -22,44 +22,9 @@ h1 {
     margin-bottom: 20px;
 }
 
-#answers {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.answer-btn {
-    flex: 1 1 calc(50% - 10px);
-    padding: 10px;
-    text-align: center;
-    background-color: #f0f0f0;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.answer-btn:hover {
-    background-color: #e0e0e0;
-}
-
-.answer-btn.correct {
-    background-color: #4caf50;
-    color: white;
-}
-
-.answer-btn.wrong {
-    background-color: #f44336;
-    color: white;
-}
-
-.answer-btn.missed {
-    background-color: #ffeb3b;
-    color: black;
-}
-
-.answer-btn.selected {
-    background-color: #00bcd4;
-    color: white;
+p {
+    font-size: 18px;
+    margin-bottom: 10px;
 }
 
 button {
@@ -74,4 +39,36 @@ button {
 button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+}
+
+#answersContainer button {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    background-color: #f0f0f0;
+}
+
+button.correct {
+    background-color: #4caf50;
+    color: #fff;
+}
+
+button.incorrect {
+    background-color: #f44336;
+    color: #fff;
+}
+
+button.unselected-correct {
+    background-color: #ffeb3b;
+    color: #000;
+}
+
+#resultContainer {
+    display: none;
+    text-align: center;
+}
+
+#restartButton {
+    background-color: #2196f3;
+    color: #fff;
 }
