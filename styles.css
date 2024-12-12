@@ -57,6 +57,10 @@ button.unselected-correct {
     color: #000;
 }
 
+button.selected {
+    background-color: #cce5ff;
+}
+
 button:disabled {
     cursor: not-allowed;
 }
