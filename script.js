@@ -791,11 +791,11 @@ const questions = [
 },
 ],
 
-    let currentQuestionIndex = 0;
-    let correctAnswersCount = 0;
-    let wrongAnswersCount = 0;
-    let selectedAnswers = [];
-    let isAnswersChecked = false;
+    var currentQuestionIndex = 0;
+    var correctAnswersCount = 0;
+    var wrongAnswersCount = 0;
+    var selectedAnswers = [];
+    var isAnswersChecked = false;
 
     const questionNumberEl = document.getElementById('questionNumber');
     const questionTextEl = document.getElementById('questionText');
