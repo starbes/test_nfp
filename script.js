@@ -1,28 +1,28 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Обработчик данных викторины
   const questions = [
     {
-      question: "What is the capital of France?",
+      question: "Что определяет Наставление по физической подготовке в Вооруженных Силах Российской Федерации?",
       answers: [
-        { text: "Paris", correct: true },
-        { text: "London", correct: false },
-        { text: "Berlin", correct: false },
-        { text: "Madrid", correct: false },
-        { text: "Rome", correct: false },
-        { text: "Lisbon", correct: false }
+        { text: "порядок организации физической подготовки военнослужащих ВС РФ, в том числе требования к уровню физической подготовленности военнослужащих, требования по уровню физической подготовки граждан РФ, поступающих на военную службу по контракту", correct: true },
+        { text: "правила проведения спортивных соревнований в Вооруженных Силах РФ", correct: false },
+        { text: "нормативы по обеспечению военнослужащих спортивным инвентарем", correct: false },
+        { text: "порядок присвоения спортивных разрядов военнослужащим", correct: false },
+        { text: "рекомендации по организации досуга военнослужащих в свободное от службы время", correct: false },
+        { text: "требования к квалификации инструкторов по физической подготовке", correct: false }
       ]
     },
     {
-      question: "Which planet is known as the Red Planet?",
+      question: "Цель физической подготовки?",
       answers: [
-        { text: "Mars", correct: true },
-        { text: "Venus", correct: false },
-        { text: "Earth", correct: false },
-        { text: "Jupiter", correct: false },
-        { text: "Saturn", correct: false },
-        { text: "Mercury", correct: false }
+        { text: "успешное выполнение военнослужащими своих служебных обязанностей", correct: true },
+        { text: "достижение высоких спортивных результатов на соревнованиях", correct: false },
+        { text: "поддержание идеальной физической формы для участия в конкурсах красоты", correct: false },
+        { text: "формирование навыков выживания в экстремальных условиях дикой природы", correct: false },
+        { text: "развитие исключительно силы и выносливости без учета других физических качеств", correct: false },
+        { text: "обеспечение психологической разгрузки и снятия стресса", correct: false }
       ]
-    }
+    },
+    // Остальные вопросы...
   ];
 
   let currentQuestionIndex = 0;
@@ -34,7 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const restartButton = document.getElementById("restart-btn");
   const resultElement = document.getElementById("result");
 
-  // Загрузка вопроса
   function loadQuestion() {
     resetState();
     const currentQuestion = questions[currentQuestionIndex];
@@ -54,7 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Очистка предыдущего состояния
   function resetState() {
     while (answersElement.firstChild) {
       answersElement.removeChild(answersElement.firstChild);
@@ -63,24 +61,17 @@ document.addEventListener('DOMContentLoaded', () => {
     nextButton.style.display = "none";
   }
 
-  // Обработка выбора ответа
   function handleAnswerSelection(button) {
-    // Очистка ранее выбранных ответов
     document.querySelectorAll(".answer-btn").forEach((btn) => {
       btn.classList.remove("selected");
     });
-
-    // Выделение выбранной кнопки
     button.classList.add("selected");
 
-    // Сохранение выбранного ответа
     const index = Array.from(answersElement.children).indexOf(button);
     selectedAnswers = [index];
-
     nextButton.style.display = "inline-block";
   }
 
-  // Проверка ответа
   function checkAnswers() {
     const currentQuestion = questions[currentQuestionIndex];
     const buttons = document.querySelectorAll(".answer-btn");
@@ -98,19 +89,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Переход к следующему вопросу
   nextButton.addEventListener("click", () => {
     const isAnswered = selectedAnswers.length > 0;
     if (isAnswered) {
       checkAnswers();
       nextButton.textContent = "Следующий";
-
       nextButton.removeEventListener("click", loadNextQuestion);
       nextButton.addEventListener("click", loadNextQuestion);
     }
   });
 
-  // Загрузка следующего вопроса
   function loadNextQuestion() {
     currentQuestionIndex++;
     if (currentQuestionIndex < questions.length) {
@@ -121,7 +109,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Показ результатов
   function showResults() {
     questionElement.innerText = "Тест завершен!";
     answersElement.innerHTML = "";
@@ -130,7 +117,6 @@ document.addEventListener('DOMContentLoaded', () => {
     resultElement.innerText = "Спасибо за участие!";
   }
 
-  // Сброс теста
   restartButton.addEventListener("click", () => {
     currentQuestionIndex = 0;
     restartButton.style.display = "none";
@@ -138,6 +124,5 @@ document.addEventListener('DOMContentLoaded', () => {
     loadQuestion();
   });
 
-  // Инициализация
   loadQuestion();
 });
