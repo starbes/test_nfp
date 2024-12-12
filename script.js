@@ -91,7 +91,7 @@ function checkAnswers() {
         if (question.correctAnswers.includes(answer)) {
             // Ответ правильный
             if (selectedAnswers.includes(answer)) {
-                button.classList.add('correct'); // Правильный и выбран
+                button.style.backgroundColor = '#CD5C5C'; // Правильный и выбран
             } else {
                 button.classList.add('unselected-correct'); // Правильный, но не выбран
             }
