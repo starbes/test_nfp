@@ -62,16 +62,35 @@ document.addEventListener('DOMContentLoaded', () => {
         nextButtonEl.disabled = selectedAnswers.length === 0;
     }
 
-    function checkAnswers() {
-        const question = questions[currentQuestionIndex];
-        const allCorrect = selectedAnswers.every(answer => question.correctAnswers.includes(answer)) && question.correctAnswers.every(answer => selectedAnswers.includes(answer));
+function checkAnswers() {
+    const question = questions[currentQuestionIndex];
+    const allCorrect = selectedAnswers.every(answer => question.correctAnswers.includes(answer)) &&
+                       question.correctAnswers.every(answer => selectedAnswers.includes(answer));
 
-        if (allCorrect) {
-            correctAnswersCount++;
-        } else {
-            wrongAnswersCount++;
+    if (allCorrect) {
+        correctAnswersCount++;
+    } else {
+        wrongAnswersCount++;
+    }
+
+    // Для каждой кнопки в answersContainer проверяем, правильный ли это ответ
+    Array.from(answersContainerEl.children).forEach(button => {
+        const answer = button.textContent;
+        
+        if (question.correctAnswers.includes(answer)) {
+            // Если ответ правильный, но не выбран — жёлтый цвет
+            button.classList.add(selectedAnswers.includes(answer) ? 'correct' : 'unselected-correct');
+        } else if (selectedAnswers.includes(answer)) {
+            // Если ответ выбран, но неправильный — красный цвет
+            button.classList.add('incorrect');
         }
 
+        button.disabled = true; // После проверки блокируем все кнопки
+    });
+
+    isAnswersChecked = true;
+    nextButtonEl.textContent = 'Далее';
+}
         Array.from(answersContainerEl.children).forEach(button => {
             const answer = button.textContent;
             if (question.correctAnswers.includes(answer)) {
