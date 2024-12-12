@@ -70,30 +70,37 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Функция для проверки правильности ответов
-    function checkAnswers() {
-        const question = questions[currentQuestionIndex];
-        const allCorrect = selectedAnswers.every(answer => question.correctAnswers.includes(answer)) &&
-                           question.correctAnswers.every(answer => selectedAnswers.includes(answer));
+function checkAnswers() {
+    const question = questions[currentQuestionIndex];
+    const allCorrect = selectedAnswers.every(answer => question.correctAnswers.includes(answer)) &&
+                       question.correctAnswers.every(answer => selectedAnswers.includes(answer));
 
-        if (allCorrect) {
-            correctAnswersCount++;
-        } else {
-            wrongAnswersCount++;
-        }
-
-        Array.from(answersContainerEl.children).forEach(button => {
-            const answer = button.textContent;
-            if (question.correctAnswers.includes(answer)) {
-                button.classList.add(selectedAnswers.includes(answer) ? 'correct' : 'unselected-correct');
-            } else if (selectedAnswers.includes(answer)) {
-                button.classList.add('incorrect');
-            }
-            button.disabled = true;  // Делаем кнопки неактивными после проверки
-        });
-
-        isAnswersChecked = true;
-        nextButtonEl.textContent = 'Далее';
+    if (allCorrect) {
+        correctAnswersCount++;
+    } else {
+        wrongAnswersCount++;
     }
+
+    Array.from(answersContainerEl.children).forEach(button => {
+        const answer = button.textContent;
+        if (question.correctAnswers.includes(answer)) {
+            // Добавляем класс для правильных ответов
+            if (selectedAnswers.includes(answer)) {
+                button.classList.add('correct'); // Выбран правильный ответ
+            } else {
+                button.classList.add('unselected-correct'); // Правильный, но не выбран
+            }
+        } else if (selectedAnswers.includes(answer)) {
+            // Добавляем класс для неправильных ответов
+            button.classList.add('incorrect');
+        }
+        button.disabled = true;  // Делаем кнопки неактивными после проверки
+    });
+
+    isAnswersChecked = true;
+    nextButtonEl.textContent = 'Далее';
+}
+
 
     // Функция для отображения результатов
     function showResults() {
