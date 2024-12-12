@@ -57,17 +57,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Функция для выделения выбранного ответа
-    function toggleAnswer(button, answer) {
-        if (selectedAnswers.includes(answer)) {
-            selectedAnswers = selectedAnswers.filter(a => a !== answer);
-            button.style.backgroundColor = '#f0f0f0';  // Сбрасываем цвет
-        } else {
-            selectedAnswers.push(answer);
-            button.style.backgroundColor = '#cce5ff';  // Выделяем выбранный ответ
-        }
-
-        nextButtonEl.disabled = selectedAnswers.length === 0;  // Делаем кнопку активной только при выборе хотя бы одного ответа
+function toggleAnswer(button, answer) {
+    if (selectedAnswers.includes(answer)) {
+        selectedAnswers = selectedAnswers.filter(a => a !== answer);
+        button.classList.remove('selected');
+    } else {
+        selectedAnswers.push(answer);
+        button.classList.add('selected');
     }
+
+    nextButtonEl.disabled = selectedAnswers.length === 0;
+}
+
 
     // Функция для проверки правильности ответов
 function checkAnswers() {
@@ -113,6 +114,10 @@ function checkAnswers() {
     // Устанавливаем флаг и текст кнопки
     isAnswersChecked = true;
     nextButtonEl.textContent = 'Далее';
+
+    Array.from(answersContainerEl.children).forEach(button => {
+    button.style.backgroundColor = ''; // Убираем инлайновые стили
+});
 }
 
     // Функция для отображения результатов
