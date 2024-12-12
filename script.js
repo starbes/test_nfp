@@ -104,13 +104,17 @@ function checkAnswers() {
         button.disabled = true;
     });
 
+        // Логируем классы кнопок для отладки
+    console.log("Состояние кнопок после проверки:");
+    Array.from(answersContainerEl.children).forEach(button => {
+        console.log(`Кнопка: "${button.textContent}" — Классы: ${button.className}`);
+    });
+
     // Устанавливаем флаг и текст кнопки
     isAnswersChecked = true;
     nextButtonEl.textContent = 'Далее';
 
-    Array.from(answersContainerEl.children).forEach(button => {
-    console.log(`Кнопка: "${button.textContent}" — Классы: ${button.className}`);
-});
+
 }
 
 
