@@ -26,29 +26,39 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultTextEl = document.getElementById('resultText');
     const restartButtonEl = document.getElementById('restartButton');
 
-    function displayQuestion() {
-        if (currentQuestionIndex >= questions.length) {
-            showResults();
-            return;
-        }
-
-        const question = questions[currentQuestionIndex];
-        questionNumberEl.textContent = `Вопрос №${currentQuestionIndex + 1} из ${questions.length}`;
-        questionTextEl.textContent = question.text;
-
-        answersContainerEl.innerHTML = '';
-        const shuffledAnswers = shuffle([...question.correctAnswers, ...question.allAnswers.filter(a => !question.correctAnswers.includes(a)).slice(0, 6 - question.correctAnswers.length)]);
-        shuffledAnswers.forEach(answer => {
-            const button = document.createElement('button');
-            button.textContent = answer;
-            button.addEventListener('click', () => toggleAnswer(button, answer));
-            answersContainerEl.appendChild(button);
-        });
-
-        nextButtonEl.textContent = 'Проверить';
-        nextButtonEl.disabled = true;
-        isAnswersChecked = false;
+function displayQuestion() {
+    if (currentQuestionIndex >= questions.length) {
+        showResults();
+        return;
     }
+
+    const question = questions[currentQuestionIndex];
+    
+    // Проверим, что мы получаем правильный вопрос
+    console.log(question.text);
+
+    // Обновляем номер вопроса
+    questionNumberEl.textContent = `Вопрос №${currentQuestionIndex + 1} из ${questions.length}`;
+    // Обновляем текст вопроса
+    questionTextEl.textContent = question.text;
+
+    // Обновляем контейнер с вариантами ответов
+    answersContainerEl.innerHTML = ''; // очищаем старые кнопки перед добавлением новых
+
+    // Перемешиваем правильные и неправильные ответы
+    const shuffledAnswers = shuffle([...question.correctAnswers, ...question.allAnswers.filter(a => !question.correctAnswers.includes(a)).slice(0, 6 - question.correctAnswers.length)]);
+
+    shuffledAnswers.forEach(answer => {
+        const button = document.createElement('button');
+        button.textContent = answer;
+        button.addEventListener('click', () => toggleAnswer(button, answer));
+        answersContainerEl.appendChild(button);
+    });
+
+    nextButtonEl.textContent = 'Проверить';
+    nextButtonEl.disabled = true;
+    isAnswersChecked = false;
+}
 
     function toggleAnswer(button, answer) {
         if (selectedAnswers.includes(answer)) {
