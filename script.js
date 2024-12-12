@@ -789,7 +789,7 @@ const questions = [
         "система подготовки тренеров в РФ"
     ],
 },
-],
+];
 
     let currentQuestionIndex = 0;
     let correctAnswersCount = 0;
