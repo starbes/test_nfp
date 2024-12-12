@@ -49,17 +49,17 @@ button:disabled {
 }
 
 button.correct {
-    background-color: #4caf50;
+    background-color: ##3CB371;
     color: #fff;
 }
 
 button.incorrect {
-    background-color: #f44336;
+    background-color: #CD5C5C;
     color: #fff;
 }
 
 button.unselected-correct {
-    background-color: #ffeb3b;
+    background-color: #FFD700;
     color: #000;
 }
 
