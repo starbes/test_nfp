@@ -8,15 +8,26 @@
 </head>
 <body>
     <div id="app">
+        <!-- Заголовок для отображения номера вопроса -->
         <h1 id="questionNumber">Вопрос №1</h1>
+
+        <!-- Текст вопроса -->
         <p id="questionText">Текст вопроса</p>
+
+        <!-- Контейнер для кнопок с вариантами ответов -->
         <div id="answersContainer"></div>
+
+        <!-- Кнопка для проверки ответов и перехода к следующему вопросу -->
         <button id="nextButton">Проверить</button>
-        <div id="resultContainer">
+
+        <!-- Контейнер для результатов -->
+        <div id="resultContainer" style="display: none;">
             <p id="resultText"></p>
+            <!-- Кнопка для перезапуска викторины -->
             <button id="restartButton">Начать сначала</button>
         </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
