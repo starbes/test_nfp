@@ -7,7 +7,16 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="app">
+    <!-- БЛОК ВЫБОРА ТЕСТА -->
+    <div id="testSelection">
+        <h1>Выберите тест</h1>
+        <button onclick="loadTest('test1.json')">Тест 1</button>
+        <button onclick="loadTest('test2.json')">Тест 2</button>
+        <button onclick="loadTest('test3.json')">Тест 3</button>
+    </div>
+
+    <!-- БЛОК ПРОХОЖДЕНИЯ ТЕСТА -->
+    <div id="app" style="display: none;">
         <h1 id="questionNumber">Вопрос №1 из 2</h1>
         <p id="questionText">Текст вопроса</p>
         <div id="answersContainer"></div>
