@@ -2,6 +2,7 @@ let currentQuestionIndex = 0;
 let correctCount = 0;
 let incorrectCount = 0;
 let questions = [];
+let selectedAnswers = new Set();
 
 const questionNumberElement = document.getElementById('questionNumber');
 const questionTextElement = document.getElementById('questionText');
@@ -17,6 +18,9 @@ function loadTest(testFile) {
     fetch(testFile)
         .then(response => response.json())
         .then(data => {
+            if (!Array.isArray(data) || data.length === 0) {
+                throw new Error("Тест пустой или повреждён");
+            }
             questions = data;
             testSelector.style.display = 'none';
             quizContainer.style.display = 'block';
@@ -38,10 +42,12 @@ function showQuestion() {
     questionTextElement.textContent = question.text;
 
     answersContainer.innerHTML = '';
+    selectedAnswers.clear();
+
     question.allAnswers.forEach(answer => {
         const button = document.createElement('button');
         button.textContent = answer;
-        button.addEventListener('click', () => selectAnswer(button, question));
+        button.addEventListener('click', () => toggleAnswer(button, answer));
         answersContainer.appendChild(button);
     });
 
@@ -50,31 +56,35 @@ function showQuestion() {
     nextButton.onclick = () => checkAnswer(question);
 }
 
-function selectAnswer(button, question) {
-    const allButtons = answersContainer.querySelectorAll('button');
-    allButtons.forEach(btn => btn.classList.remove('selected'));
-    button.classList.add('selected');
+function toggleAnswer(button, answer) {
+    if (selectedAnswers.has(answer)) {
+        selectedAnswers.delete(answer);
+        button.classList.remove('selected');
+    } else {
+        selectedAnswers.add(answer);
+        button.classList.add('selected');
+    }
 }
 
 function checkAnswer(question) {
-    const selected = answersContainer.querySelector('.selected');
+    const correctSet = new Set(question.correctAnswers);
     const allButtons = answersContainer.querySelectorAll('button');
 
-    if (!selected) {
-        alert("Выберите один из вариантов ответа.");
-        return;
-    }
-
-    const selectedText = selected.textContent;
-    const isCorrect = question.correctAnswers.includes(selectedText);
+    const isCorrect = setsEqual(selectedAnswers, correctSet);
 
     allButtons.forEach(button => {
-        const isRight = question.correctAnswers.includes(button.textContent);
-        if (button === selected) {
-            button.classList.add(isRight ? 'correct' : 'incorrect');
-        } else if (isRight) {
+        const answer = button.textContent;
+        const isRight = correctSet.has(answer);
+        const isSelected = selectedAnswers.has(answer);
+
+        if (isRight && isSelected) {
+            button.classList.add('correct');
+        } else if (isRight && !isSelected) {
             button.classList.add('unselected-correct');
+        } else if (!isRight && isSelected) {
+            button.classList.add('incorrect');
         }
+
         button.disabled = true;
     });
 
@@ -108,3 +118,11 @@ restartButton.addEventListener('click', () => {
     resultContainer.style.display = 'none';
     testSelector.style.display = 'block';
 });
+
+function setsEqual(a, b) {
+    if (a.size !== b.size) return false;
+    for (let item of a) {
+        if (!b.has(item)) return false;
+    }
+    return true;
+}
