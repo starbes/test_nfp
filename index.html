@@ -8,24 +8,26 @@
 </head>
 <body>
     <div id="app">
-        <!-- ЭКРАН ВЫБОРА ТЕСТА -->
+        <!-- Выбор теста -->
         <div id="testSelector">
-            <h2>Выберите тест:</h2>
-            <button onclick="loadTest('test1.json')">Тест №1</button>
-            <button onclick="loadTest('test2.json')">Тест №2</button>
-            <button onclick="loadTest('test3.json')">Тест №3</button>
+            <h2>Выберите тест</h2>
+            <button onclick="loadTest('test1.json')">Тест 1</button>
+            <button onclick="loadTest('test2.json')">Тест 2</button>
+            <button onclick="loadTest('test3.json')">Тест 3</button>
         </div>
 
-        <!-- ОСНОВНОЙ ЭКРАН ТЕСТИРОВАНИЯ -->
+        <!-- Основной тест -->
         <div id="quizContainer" style="display: none;">
             <h1 id="questionNumber">Вопрос №1 из 2</h1>
             <p id="questionText">Текст вопроса</p>
             <div id="answersContainer"></div>
             <button id="nextButton">Проверить</button>
-            <div id="resultContainer">
-                <p id="resultText">Правильных ответов: 0 Неправильных ответов: 0</p>
-                <button id="restartButton">Начать сначала</button>
-            </div>
+        </div>
+
+        <!-- Результат -->
+        <div id="resultContainer" style="display: none;">
+            <p id="resultText">Правильных ответов: 0 Неправильных ответов: 0</p>
+            <button id="restartButton">Начать сначала</button>
         </div>
     </div>
 
