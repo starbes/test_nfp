@@ -21,7 +21,7 @@ function loadTest(testFile) {
             if (!Array.isArray(data) || data.length === 0) {
                 throw new Error("Тест пустой или повреждён");
             }
-            questions = data;
+            questions = shuffle(data); // перемешиваем вопросы
             testSelector.style.display = 'none';
             quizContainer.style.display = 'block';
             currentQuestionIndex = 0;
@@ -44,7 +44,9 @@ function showQuestion() {
     answersContainer.innerHTML = '';
     selectedAnswers.clear();
 
-    question.allAnswers.forEach(answer => {
+    const shuffledAnswers = shuffle([...question.allAnswers]);
+
+    shuffledAnswers.forEach(answer => {
         const button = document.createElement('button');
         button.textContent = answer;
         button.addEventListener('click', () => toggleAnswer(button, answer));
@@ -125,4 +127,12 @@ function setsEqual(a, b) {
         if (!b.has(item)) return false;
     }
     return true;
+}
+
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
 }
