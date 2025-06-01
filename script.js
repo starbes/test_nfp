@@ -1,139 +1,110 @@
-let questions = [];
 let currentQuestionIndex = 0;
 let correctCount = 0;
 let incorrectCount = 0;
+let questions = [];
 
-// Элементы интерфейса
-const testSelection = document.getElementById("testSelection");
-const app = document.getElementById("app");
-const questionNumber = document.getElementById("questionNumber");
-const questionText = document.getElementById("questionText");
-const answersContainer = document.getElementById("answersContainer");
-const nextButton = document.getElementById("nextButton");
-const resultContainer = document.getElementById("resultContainer");
-const resultText = document.getElementById("resultText");
-const restartButton = document.getElementById("restartButton");
+const questionNumberElement = document.getElementById('questionNumber');
+const questionTextElement = document.getElementById('questionText');
+const answersContainer = document.getElementById('answersContainer');
+const nextButton = document.getElementById('nextButton');
+const resultContainer = document.getElementById('resultContainer');
+const resultText = document.getElementById('resultText');
+const restartButton = document.getElementById('restartButton');
+const testSelector = document.getElementById('testSelector');
+const quizContainer = document.getElementById('quizContainer');
 
-let selectedAnswers = new Set();
-
-// Функция запуска теста после выбора
-function loadTest(fileName) {
-    fetch(fileName)
+function loadTest(testFile) {
+    fetch(testFile)
         .then(response => response.json())
         .then(data => {
             questions = data;
-            testSelection.style.display = "none";
-            app.style.display = "block";
-            startQuiz();
+            testSelector.style.display = 'none';
+            quizContainer.style.display = 'block';
+            currentQuestionIndex = 0;
+            correctCount = 0;
+            incorrectCount = 0;
+            resultContainer.style.display = 'none';
+            showQuestion();
         })
         .catch(error => {
-            alert("Ошибка загрузки теста: " + error);
+            console.error("Ошибка загрузки теста:", error);
+            alert("Ошибка загрузки теста: " + error.message);
         });
 }
 
-// Инициализация первого вопроса
-function startQuiz() {
-    currentQuestionIndex = 0;
-    correctCount = 0;
-    incorrectCount = 0;
-    resultContainer.style.display = "none";
-    nextButton.textContent = "Проверить";
-    showQuestion();
-}
-
-// Отображение текущего вопроса
 function showQuestion() {
     const question = questions[currentQuestionIndex];
-    questionNumber.textContent = `Вопрос №${currentQuestionIndex + 1} из ${questions.length}`;
-    questionText.textContent = question.text;
-    answersContainer.innerHTML = "";
-    selectedAnswers.clear();
+    questionNumberElement.textContent = `Вопрос №${currentQuestionIndex + 1} из ${questions.length}`;
+    questionTextElement.textContent = question.text;
 
+    answersContainer.innerHTML = '';
     question.allAnswers.forEach(answer => {
-        const label = document.createElement("label");
-        label.classList.add("answer-option");
-
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.value = answer;
-        checkbox.addEventListener("change", () => {
-            if (checkbox.checked) {
-                selectedAnswers.add(answer);
-            } else {
-                selectedAnswers.delete(answer);
-            }
-        });
-
-        label.appendChild(checkbox);
-        label.appendChild(document.createTextNode(answer));
-        answersContainer.appendChild(label);
+        const button = document.createElement('button');
+        button.textContent = answer;
+        button.addEventListener('click', () => selectAnswer(button, question));
+        answersContainer.appendChild(button);
     });
+
+    nextButton.disabled = false;
+    nextButton.textContent = 'Проверить';
+    nextButton.onclick = () => checkAnswer(question);
 }
 
-// Обработка кнопки "Проверить/Далее"
-nextButton.addEventListener("click", () => {
-    if (nextButton.textContent === "Проверить") {
-        checkAnswer();
-        nextButton.textContent = currentQuestionIndex < questions.length - 1 ? "Следующий" : "Показать результат";
-    } else {
-        currentQuestionIndex++;
-        if (currentQuestionIndex < questions.length) {
-            nextButton.textContent = "Проверить";
-            showQuestion();
-        } else {
-            showResult();
-        }
-    }
-});
+function selectAnswer(button, question) {
+    const allButtons = answersContainer.querySelectorAll('button');
+    allButtons.forEach(btn => btn.classList.remove('selected'));
+    button.classList.add('selected');
+}
 
-// Проверка правильности ответа
-function checkAnswer() {
-    const correctAnswers = new Set(questions[currentQuestionIndex].correctAnswers);
-    if (setsEqual(correctAnswers, selectedAnswers)) {
+function checkAnswer(question) {
+    const selected = answersContainer.querySelector('.selected');
+    const allButtons = answersContainer.querySelectorAll('button');
+
+    if (!selected) {
+        alert("Выберите один из вариантов ответа.");
+        return;
+    }
+
+    const selectedText = selected.textContent;
+    const isCorrect = question.correctAnswers.includes(selectedText);
+
+    allButtons.forEach(button => {
+        const isRight = question.correctAnswers.includes(button.textContent);
+        if (button === selected) {
+            button.classList.add(isRight ? 'correct' : 'incorrect');
+        } else if (isRight) {
+            button.classList.add('unselected-correct');
+        }
+        button.disabled = true;
+    });
+
+    if (isCorrect) {
         correctCount++;
     } else {
         incorrectCount++;
     }
 
-    // Подсветка правильных/неправильных
-    const inputs = answersContainer.querySelectorAll("input");
-    inputs.forEach(input => {
-        if (correctAnswers.has(input.value)) {
-            input.parentElement.style.backgroundColor = "#c8f7c5"; // зеленый
-        } else if (input.checked) {
-            input.parentElement.style.backgroundColor = "#f7c5c5"; // красный
-        }
-        input.disabled = true;
-    });
+    nextButton.textContent = (currentQuestionIndex < questions.length - 1) ? 'Следующий' : 'Показать результат';
+    nextButton.onclick = nextQuestion;
 }
 
-// Сравнение множеств
-function setsEqual(a, b) {
-    if (a.size !== b.size) return false;
-    for (let item of a) {
-        if (!b.has(item)) return false;
+function nextQuestion() {
+    currentQuestionIndex++;
+    if (currentQuestionIndex < questions.length) {
+        showQuestion();
+    } else {
+        showResult();
     }
-    return true;
 }
 
-// Показ финального результата
 function showResult() {
-    questionNumber.style.display = "none";
-    questionText.style.display = "none";
-    answersContainer.style.display = "none";
-    nextButton.style.display = "none";
-
-    resultText.textContent = `Правильных ответов: ${correctCount}, Неправильных: ${incorrectCount}`;
-    resultContainer.style.display = "block";
+    quizContainer.style.display = 'none';
+    resultContainer.style.display = 'block';
+    resultText.textContent = `Правильных ответов: ${correctCount}, Неправильных ответов: ${incorrectCount}`;
 }
 
-// Кнопка "Начать сначала"
-restartButton.addEventListener("click", () => {
-    app.style.display = "none";
-    testSelection.style.display = "block";
-
-    questionNumber.style.display = "block";
-    questionText.style.display = "block";
-    answersContainer.style.display = "block";
-    nextButton.style.display = "inline-block";
+restartButton.addEventListener('click', () => {
+    quizContainer.style.display = 'none';
+    resultContainer.style.display = 'none';
+    testSelector.style.display = 'block';
 });
