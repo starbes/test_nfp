@@ -7,23 +7,25 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- БЛОК ВЫБОРА ТЕСТА -->
-    <div id="testSelection">
-        <h1>Выберите тест</h1>
-        <button onclick="loadTest('test1.json')">Тест 1</button>
-        <button onclick="loadTest('test2.json')">Тест 2</button>
-        <button onclick="loadTest('test3.json')">Тест 3</button>
-    </div>
+    <div id="app">
+        <!-- ЭКРАН ВЫБОРА ТЕСТА -->
+        <div id="testSelector">
+            <h2>Выберите тест:</h2>
+            <button onclick="loadTest('test1.json')">Тест №1</button>
+            <button onclick="loadTest('test2.json')">Тест №2</button>
+            <button onclick="loadTest('test3.json')">Тест №3</button>
+        </div>
 
-    <!-- БЛОК ПРОХОЖДЕНИЯ ТЕСТА -->
-    <div id="app" style="display: none;">
-        <h1 id="questionNumber">Вопрос №1 из 2</h1>
-        <p id="questionText">Текст вопроса</p>
-        <div id="answersContainer"></div>
-        <button id="nextButton">Проверить</button>
-        <div id="resultContainer" style="display: none;">
-            <p id="resultText">Правильных ответов: 0 Неправильных ответов: 0</p>
-            <button id="restartButton">Начать сначала</button>
+        <!-- ОСНОВНОЙ ЭКРАН ТЕСТИРОВАНИЯ -->
+        <div id="quizContainer" style="display: none;">
+            <h1 id="questionNumber">Вопрос №1 из 2</h1>
+            <p id="questionText">Текст вопроса</p>
+            <div id="answersContainer"></div>
+            <button id="nextButton">Проверить</button>
+            <div id="resultContainer">
+                <p id="resultText">Правильных ответов: 0 Неправильных ответов: 0</p>
+                <button id="restartButton">Начать сначала</button>
+            </div>
         </div>
     </div>
 
