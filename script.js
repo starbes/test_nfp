@@ -1,154 +1,139 @@
-document.addEventListener('DOMContentLoaded', () => {
+let questions = [];
+let currentQuestionIndex = 0;
+let correctCount = 0;
+let incorrectCount = 0;
 
-},
-];
+// Элементы интерфейса
+const testSelection = document.getElementById("testSelection");
+const app = document.getElementById("app");
+const questionNumber = document.getElementById("questionNumber");
+const questionText = document.getElementById("questionText");
+const answersContainer = document.getElementById("answersContainer");
+const nextButton = document.getElementById("nextButton");
+const resultContainer = document.getElementById("resultContainer");
+const resultText = document.getElementById("resultText");
+const restartButton = document.getElementById("restartButton");
 
-    let currentQuestionIndex = 0;
-    let correctAnswersCount = 0;
-    let wrongAnswersCount = 0;
-    let selectedAnswers = [];
-    let isAnswersChecked = false;
+let selectedAnswers = new Set();
 
-    const questionNumberEl = document.getElementById('questionNumber');
-    const questionTextEl = document.getElementById('questionText');
-    const answersContainerEl = document.getElementById('answersContainer');
-    const nextButtonEl = document.getElementById('nextButton');
-    const resultContainerEl = document.getElementById('resultContainer');
-    const resultTextEl = document.getElementById('resultText');
-    const restartButtonEl = document.getElementById('restartButton');
+// Функция запуска теста после выбора
+function loadTest(fileName) {
+    fetch(fileName)
+        .then(response => response.json())
+        .then(data => {
+            questions = data;
+            testSelection.style.display = "none";
+            app.style.display = "block";
+            startQuiz();
+        })
+        .catch(error => {
+            alert("Ошибка загрузки теста: " + error);
+        });
+}
 
-    // Функция для отображения вопроса
-    function displayQuestion() {
-        if (currentQuestionIndex >= questions.length) {
-            showResults();
-            return;
-        }
+// Инициализация первого вопроса
+function startQuiz() {
+    currentQuestionIndex = 0;
+    correctCount = 0;
+    incorrectCount = 0;
+    resultContainer.style.display = "none";
+    nextButton.textContent = "Проверить";
+    showQuestion();
+}
 
-        const question = questions[currentQuestionIndex];
-        questionNumberEl.textContent = `Вопрос №${currentQuestionIndex + 1} из ${questions.length}`;
-        questionTextEl.textContent = question.text;
+// Отображение текущего вопроса
+function showQuestion() {
+    const question = questions[currentQuestionIndex];
+    questionNumber.textContent = `Вопрос №${currentQuestionIndex + 1} из ${questions.length}`;
+    questionText.textContent = question.text;
+    answersContainer.innerHTML = "";
+    selectedAnswers.clear();
 
-        answersContainerEl.innerHTML = '';  // Очищаем контейнер с ответами
+    question.allAnswers.forEach(answer => {
+        const label = document.createElement("label");
+        label.classList.add("answer-option");
 
-        const shuffledAnswers = shuffle([
-            ...question.correctAnswers,
-            ...question.allAnswers.filter(a => !question.correctAnswers.includes(a)).slice(0, 6 - question.correctAnswers.length)
-        ]);
-
-        shuffledAnswers.forEach(answer => {
-            const button = document.createElement('button');
-            button.textContent = answer;
-            button.addEventListener('click', () => toggleAnswer(button, answer));
-            answersContainerEl.appendChild(button);
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.value = answer;
+        checkbox.addEventListener("change", () => {
+            if (checkbox.checked) {
+                selectedAnswers.add(answer);
+            } else {
+                selectedAnswers.delete(answer);
+            }
         });
 
-        nextButtonEl.textContent = 'Проверить';
-        nextButtonEl.disabled = true;
-        isAnswersChecked = false;
-    }
-
-    // Функция для выделения выбранного ответа
-function toggleAnswer(button, answer) {
-    if (selectedAnswers.includes(answer)) {
-        selectedAnswers = selectedAnswers.filter(a => a !== answer);
-        button.classList.remove('selected');
-    } else {
-        selectedAnswers.push(answer);
-        button.classList.add('selected');
-    }
-
-    nextButtonEl.disabled = selectedAnswers.length === 0;
-}
-
-
-    // Функция для проверки правильности ответов
-function checkAnswers() {
-    const question = questions[currentQuestionIndex];
-
-    // Проверяем правильность выбранных ответов
-    const allCorrect =
-        selectedAnswers.every(answer => question.correctAnswers.includes(answer)) &&
-        question.correctAnswers.every(answer => selectedAnswers.includes(answer));
-
-    if (allCorrect) {
-        correctAnswersCount++;
-    } else {
-        wrongAnswersCount++;
-    }
-
-    // Обрабатываем кнопки
-    Array.from(answersContainerEl.children).forEach(button => {
-        const answer = button.textContent;
-
-        if (question.correctAnswers.includes(answer)) {
-            // Если ответ правильный
-            if (selectedAnswers.includes(answer)) {
-                button.classList.add('correct'); // Выбранный правильный ответ
-            } else {
-                button.classList.add('unselected-correct'); // Правильный, но не выбранный
-            }
-        } else if (selectedAnswers.includes(answer)) {
-            // Если ответ неправильный и был выбран
-            button.classList.add('incorrect');
-        }
-
-        // Делаем кнопку неактивной
-        button.disabled = true;
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(answer));
+        answersContainer.appendChild(label);
     });
-
-    // Устанавливаем флаг и текст кнопки
-    isAnswersChecked = true;
-    nextButtonEl.textContent = 'Далее';
-
-    Array.from(answersContainerEl.children).forEach(button => {
-    button.style.backgroundColor = ''; // Убираем инлайновые стили
-});
 }
 
-    // Функция для отображения результатов
-    function showResults() {
-        questionNumberEl.textContent = 'Тест завершен!';
-        questionTextEl.textContent = '';
-        answersContainerEl.innerHTML = '';
-        resultTextEl.textContent = `Правильных ответов: ${correctAnswersCount}\nНеправильных ответов: ${wrongAnswersCount}`;
-        resultContainerEl.style.display = 'block';
-        nextButtonEl.style.display = 'none';
-    }
-
-    // Функция для перезапуска викторины
-    function restartQuiz() {
-        currentQuestionIndex = 0;
-        correctAnswersCount = 0;
-        wrongAnswersCount = 0;
-        selectedAnswers = [];
-        resultContainerEl.style.display = 'none';
-        nextButtonEl.style.display = 'block';
-        displayQuestion();
-    }
-
-    // Обработчик нажатия кнопки "Проверить" или "Далее"
-    nextButtonEl.addEventListener('click', () => {
-        if (!isAnswersChecked) {
-            checkAnswers();
+// Обработка кнопки "Проверить/Далее"
+nextButton.addEventListener("click", () => {
+    if (nextButton.textContent === "Проверить") {
+        checkAnswer();
+        nextButton.textContent = currentQuestionIndex < questions.length - 1 ? "Следующий" : "Показать результат";
+    } else {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < questions.length) {
+            nextButton.textContent = "Проверить";
+            showQuestion();
         } else {
-            currentQuestionIndex++;
-            selectedAnswers = [];
-            displayQuestion();
+            showResult();
         }
-    });
+    }
+});
 
-    // Обработчик нажатия кнопки "Начать сначала"
-    restartButtonEl.addEventListener('click', restartQuiz);
-
-    // Функция для перемешивания массива
-    function shuffle(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];  // Меняем местами элементы
-        }
-        return array;
+// Проверка правильности ответа
+function checkAnswer() {
+    const correctAnswers = new Set(questions[currentQuestionIndex].correctAnswers);
+    if (setsEqual(correctAnswers, selectedAnswers)) {
+        correctCount++;
+    } else {
+        incorrectCount++;
     }
 
-    // Инициализация викторины
-    displayQuestion();
+    // Подсветка правильных/неправильных
+    const inputs = answersContainer.querySelectorAll("input");
+    inputs.forEach(input => {
+        if (correctAnswers.has(input.value)) {
+            input.parentElement.style.backgroundColor = "#c8f7c5"; // зеленый
+        } else if (input.checked) {
+            input.parentElement.style.backgroundColor = "#f7c5c5"; // красный
+        }
+        input.disabled = true;
+    });
+}
+
+// Сравнение множеств
+function setsEqual(a, b) {
+    if (a.size !== b.size) return false;
+    for (let item of a) {
+        if (!b.has(item)) return false;
+    }
+    return true;
+}
+
+// Показ финального результата
+function showResult() {
+    questionNumber.style.display = "none";
+    questionText.style.display = "none";
+    answersContainer.style.display = "none";
+    nextButton.style.display = "none";
+
+    resultText.textContent = `Правильных ответов: ${correctCount}, Неправильных: ${incorrectCount}`;
+    resultContainer.style.display = "block";
+}
+
+// Кнопка "Начать сначала"
+restartButton.addEventListener("click", () => {
+    app.style.display = "none";
+    testSelection.style.display = "block";
+
+    questionNumber.style.display = "block";
+    questionText.style.display = "block";
+    answersContainer.style.display = "block";
+    nextButton.style.display = "inline-block";
 });
