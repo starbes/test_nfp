@@ -126,3 +126,12 @@ button:disabled {
 #testSelector button:hover {
     background-color: #45a049;
 }
+
+#questionHeader {
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    padding: 10px 0;
+    z-index: 10;
+    border-bottom: 1px solid #ddd;
+}
