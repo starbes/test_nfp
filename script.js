@@ -145,7 +145,7 @@ document.getElementById('restartButton').addEventListener('click', () => {
 // Кнопка "Поделиться результатом"
 document.getElementById('shareButton').addEventListener('click', () => {
     const resultText = document.getElementById('resultText').textContent;
-    const shareMessage = `Я прошёл тестирование! ${resultText}. Попробуй и ты: https://ваш-сайт.рф`;
+    const shareMessage = `Я прошёл тестирование! ${resultText}. Попробуй и ты: @tgcontrollsbot`;
 
     const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent("@tgcontrollsbot")}&text=${encodeURIComponent(shareMessage)}`;
 
