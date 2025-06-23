@@ -136,3 +136,19 @@ function shuffle(array) {
     }
     return array;
 }
+
+// Кнопка "Начать сначала"
+document.getElementById('restartButton').addEventListener('click', () => {
+    location.reload(); // Полная перезагрузка приложения
+});
+
+// Кнопка "Поделиться результатом"
+document.getElementById('shareButton').addEventListener('click', () => {
+    const resultText = document.getElementById('resultText').textContent;
+    const shareMessage = `Я прошёл тестирование! ${resultText}. Попробуй и ты: https://ваш-сайт.рф`;
+
+    const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent("@tgcontrollsbot")}&text=${encodeURIComponent(shareMessage)}`;
+
+    window.open(telegramUrl, '_blank');
+});
+
